@@ -68,3 +68,30 @@ func OperationO(a, b uint64) (uint64, uint64) {
 
 	return integer, cur
 }
+
+func ImposeError(a, e uint64) uint64 {
+	aBytes := IntToBytes(a)
+	eBytes := IntToBytes(e)
+
+	if len(aBytes) > len(eBytes) {
+		eBytes = append(make([]byte, len(aBytes)-len(eBytes)), eBytes...)
+	} else {
+		aBytes = append(make([]byte, len(eBytes)-len(aBytes)), aBytes...)
+	}
+
+	for pos, eByte := range eBytes {
+		if eByte == 1 {
+			if aBytes[pos] == 1 {
+				aBytes[pos] = 0
+				continue
+			}
+			aBytes[pos] = 1
+		}
+	}
+	a = 0
+	for _, val := range aBytes {
+		a <<= 1
+		a += uint64(val)
+	}
+	return a
+}

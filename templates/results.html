@@ -58,6 +58,32 @@
                 </div>
             </div>
         </nav>
+
+        <div class="container">
+            <h2 class="my-4">Результаты</h2>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Кратность ошибки</th>
+                    <th>Общее число ошибок, шт</th>
+                    <th>Скорректированные ошибки, шт</th>
+                    <th>Корректирующая способность, %</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $key, $value := .}}
+                {{if (ne $key 0)}}
+                <tr>
+                    <td>{{$key}}</td>
+                    <td>{{$value.ClassSize}}</td>
+                    <td>{{$value.Count}}</td>
+                    <td>{{$value.CorrectiveAbility}}</td>
+                </tr>
+                {{end}}
+                {{end}}
+                </tbody>
+            </table>
+        </div>
     </div>
     <footer class="py-2 mt-4 container border-top">
         <p class="text-center text-muted">ИУ5-53Б Ювенский Лев | <a

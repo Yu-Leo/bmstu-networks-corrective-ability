@@ -8,7 +8,7 @@ import (
 )
 
 type Errors struct {
-	Errorclasses [][]uint64
+	ErrorClasses [][]uint64
 	cfg          *Config
 }
 
@@ -19,15 +19,15 @@ func NewErrors(cfg *Config) *Errors {
 }
 
 func (e *Errors) Calculate() {
-	e.Errorclasses = make([][]uint64, e.cfg.N+1)
+	e.ErrorClasses = make([][]uint64, e.cfg.N+1)
 	for i := uint64(1); i <= e.cfg.N; i++ {
 		size := factorial(e.cfg.N) / factorial(e.cfg.N-i) / factorial(i)
-		e.Errorclasses[i] = make([]uint64, 0, size)
+		e.ErrorClasses[i] = make([]uint64, 0, size)
 	}
 
 	for i := uint64(1); i < powBinary(e.cfg.N); i++ {
 		class := bits.OnesCount64(i)
-		e.Errorclasses[class] = append(e.Errorclasses[class], i)
+		e.ErrorClasses[class] = append(e.ErrorClasses[class], i)
 	}
 }
 
@@ -38,10 +38,10 @@ func (e *Errors) GetHandler() Handler {
 			fmt.Println(err)
 		}
 
-		errorsCountView := make([]int, len(e.Errorclasses))
+		errorsCountView := make([]int, len(e.ErrorClasses))
 
-		errorsRawView := make([][]string, len(e.Errorclasses))
-		for class, errorClass := range e.Errorclasses {
+		errorsRawView := make([][]string, len(e.ErrorClasses))
+		for class, errorClass := range e.ErrorClasses {
 			errorsRawView[class] = make([]string, len(errorClass))
 			for i, err := range errorClass {
 				errorsRawView[class][i] = fmt.Sprintf("%b", err)

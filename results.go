@@ -6,18 +6,49 @@ import (
 	"net/http"
 )
 
-type Results struct {
-	cfg *Config
+type ResultRow struct {
+	CorrectiveAbility string
+	Count             uint64
+	ClassSize         int
 }
 
-func NewResults(cfg *Config) *Results {
+type Results struct {
+	cfg           *Config
+	result        []ResultRow
+	errorClasses  [][]uint64
+	SyndromeTable map[int]map[uint64]uint64
+}
+
+func NewResults(cfg *Config, errorClasses [][]uint64, SyndromeTable map[int]map[uint64]uint64) *Results {
 	return &Results{
-		cfg: cfg,
+		cfg:           cfg,
+		errorClasses:  errorClasses,
+		SyndromeTable: SyndromeTable,
 	}
 }
 
 func (s *Results) Calculate() {
-	// TODO
+	s.result = make([]ResultRow, s.cfg.N+1)
+
+	for class, errorClass := range s.errorClasses {
+		var correctedCounter uint64
+		for _, errorVector := range errorClass {
+			transferredVector := ImposeError(s.cfg.vector, errorVector)
+			_, syndrome := OperationO(transferredVector, s.cfg.genPolynomial)
+			if syndrome == 0 {
+				continue
+			}
+			correctedVector := ImposeError(transferredVector, s.SyndromeTable[class][syndrome])
+			if correctedVector == s.cfg.vector {
+				correctedCounter++
+			}
+		}
+		s.result[class] = ResultRow{
+			fmt.Sprintf("%.2f", float64(correctedCounter)*100/float64(len(errorClass))),
+			correctedCounter,
+			len(errorClass),
+		}
+	}
 }
 
 func (s *Results) GetHandler() Handler {
@@ -26,7 +57,7 @@ func (s *Results) GetHandler() Handler {
 		if err != nil {
 			fmt.Println(err)
 		}
-		err = tmpl.Execute(w, nil)
+		err = tmpl.Execute(w, s.result)
 		if err != nil {
 			fmt.Println(err)
 		}

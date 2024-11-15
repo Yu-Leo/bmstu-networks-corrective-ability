@@ -30,8 +30,8 @@ func main() {
 	var config = &Config{
 		N:             15,
 		K:             11,
-		vector:        1234, // TODO
-		genPolynomial: 19,   // TODO
+		vector:        1335, // TODO
+		genPolynomial: 19,   // 10011
 	}
 
 	errors := NewErrors(config)
@@ -40,10 +40,10 @@ func main() {
 	errorsAndSyndromes := NewErrorsAndSyndromes(config)
 	errorsAndSyndromes.Calculate()
 
-	syndromes := NewSyndromes(config, errors.Errorclasses[1])
+	syndromes := NewSyndromes(config, errors.ErrorClasses)
 	syndromes.Calculate()
 
-	results := NewResults(config)
+	results := NewResults(config, errors.ErrorClasses, syndromes.SyndromeTable)
 	results.Calculate()
 
 	http.HandleFunc("/", mainPageHandler)
