@@ -31,7 +31,7 @@ func main() {
 	var config = &Config{
 		N:             15,
 		K:             11,
-		vector:        32050, // TODO
+		vector:        32050, // 111.1101.0011.0010
 		genPolynomial: 19,    // 10011
 		debug:         true,
 	}
