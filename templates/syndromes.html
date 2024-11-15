@@ -58,6 +58,26 @@
                 </div>
             </div>
         </nav>
+
+        <div class="container">
+            <h2 class="my-4">Синдромы</h2>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Синдром</th>
+                    <th>Вектор ошибки</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $key, $value := .}}
+                <tr>
+                    <td>{{$key}}</td>
+                    <td>{{$value}}</td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
     </div>
     <footer class="py-2 mt-4 container border-top">
         <p class="text-center text-muted">ИУ5-53Б Ювенский Лев | <a

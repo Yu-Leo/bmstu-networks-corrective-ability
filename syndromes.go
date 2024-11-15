@@ -7,17 +7,24 @@ import (
 )
 
 type Syndromes struct {
-	cfg *Config
+	cfg           *Config
+	syndromeTable map[uint64]uint64
+	errorVectors  []uint64
 }
 
-func NewSyndromes(cfg *Config) *Syndromes {
+func NewSyndromes(cfg *Config, errorVectors []uint64) *Syndromes {
 	return &Syndromes{
-		cfg: cfg,
+		cfg:          cfg,
+		errorVectors: errorVectors,
 	}
 }
 
 func (s *Syndromes) Calculate() {
-	// TODO
+	s.syndromeTable = make(map[uint64]uint64, len(s.errorVectors))
+	for _, errVec := range s.errorVectors {
+		_, syndrome := OperationO(errVec, s.cfg.genPolynomial)
+		s.syndromeTable[syndrome] = errVec
+	}
 }
 
 func (s *Syndromes) GetHandler() Handler {
@@ -26,7 +33,11 @@ func (s *Syndromes) GetHandler() Handler {
 		if err != nil {
 			fmt.Println(err)
 		}
-		err = tmpl.Execute(w, nil)
+		syndromeTableStr := make(map[string]string, len(s.syndromeTable))
+		for syndrome, err := range s.syndromeTable {
+			syndromeTableStr[fmt.Sprintf("%b", syndrome)] = fmt.Sprintf("%b", err)
+		}
+		err = tmpl.Execute(w, syndromeTableStr)
 		if err != nil {
 			fmt.Println(err)
 		}

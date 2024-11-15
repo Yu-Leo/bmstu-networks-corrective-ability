@@ -35,13 +35,15 @@ func main() {
 	}
 
 	errors := NewErrors(config)
-	errorsAndSyndromes := NewErrorsAndSyndromes(config)
-	syndromes := NewSyndromes(config)
-	results := NewResults(config)
-
 	errors.Calculate()
+
+	errorsAndSyndromes := NewErrorsAndSyndromes(config)
 	errorsAndSyndromes.Calculate()
+
+	syndromes := NewSyndromes(config, errors.Errorclasses[1])
 	syndromes.Calculate()
+
+	results := NewResults(config)
 	results.Calculate()
 
 	http.HandleFunc("/", mainPageHandler)

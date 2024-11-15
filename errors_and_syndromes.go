@@ -7,7 +7,8 @@ import (
 )
 
 type ErrorsAndSyndromes struct {
-	cfg *Config
+	cfg      *Config
+	errorMap map[string]string
 }
 
 func NewErrorsAndSyndromes(cfg *Config) *ErrorsAndSyndromes {
@@ -17,7 +18,11 @@ func NewErrorsAndSyndromes(cfg *Config) *ErrorsAndSyndromes {
 }
 
 func (e *ErrorsAndSyndromes) Calculate() {
-	// TODO
+	e.errorMap = make(map[string]string, powBinary(e.cfg.N))
+	for i := uint64(1); i < powBinary(e.cfg.N); i++ {
+		_, syndrome := OperationO(i, e.cfg.genPolynomial)
+		e.errorMap[fmt.Sprintf("%b", i)] = fmt.Sprintf("%b", syndrome)
+	}
 }
 
 func (e *ErrorsAndSyndromes) GetHandler() Handler {
@@ -26,7 +31,7 @@ func (e *ErrorsAndSyndromes) GetHandler() Handler {
 		if err != nil {
 			fmt.Println(err)
 		}
-		err = tmpl.Execute(w, nil)
+		err = tmpl.Execute(w, e.errorMap)
 		if err != nil {
 			fmt.Println(err)
 		}
