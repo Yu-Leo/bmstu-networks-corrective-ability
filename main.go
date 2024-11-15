@@ -19,11 +19,25 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type Config struct {
+	N             uint64
+	K             uint64
+	vector        uint64
+	genPolynomial uint64
+}
+
 func main() {
-	errors := NewErrors()
-	errorsAndSyndromes := NewErrorsAndSyndromes()
-	syndromes := NewSyndromes()
-	results := NewResults()
+	var config = &Config{
+		N:             15,
+		K:             11,
+		vector:        1234, // TODO
+		genPolynomial: 19,   // TODO
+	}
+
+	errors := NewErrors(config)
+	errorsAndSyndromes := NewErrorsAndSyndromes(config)
+	syndromes := NewSyndromes(config)
+	results := NewResults(config)
 
 	errors.Calculate()
 	errorsAndSyndromes.Calculate()

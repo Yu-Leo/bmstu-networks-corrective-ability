@@ -7,10 +7,13 @@ import (
 )
 
 type Syndromes struct {
+	cfg *Config
 }
 
-func NewSyndromes() *Syndromes {
-	return &Syndromes{}
+func NewSyndromes(cfg *Config) *Syndromes {
+	return &Syndromes{
+		cfg: cfg,
+	}
 }
 
 func (s *Syndromes) Calculate() {

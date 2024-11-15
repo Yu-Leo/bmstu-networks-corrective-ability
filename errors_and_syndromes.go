@@ -7,10 +7,13 @@ import (
 )
 
 type ErrorsAndSyndromes struct {
+	cfg *Config
 }
 
-func NewErrorsAndSyndromes() *ErrorsAndSyndromes {
-	return &ErrorsAndSyndromes{}
+func NewErrorsAndSyndromes(cfg *Config) *ErrorsAndSyndromes {
+	return &ErrorsAndSyndromes{
+		cfg: cfg,
+	}
 }
 
 func (e *ErrorsAndSyndromes) Calculate() {

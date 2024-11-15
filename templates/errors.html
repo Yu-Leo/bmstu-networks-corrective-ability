@@ -59,9 +59,54 @@
             </div>
         </nav>
     </div>
+
+    <div class="container">
+        <h2 class="my-4">Количество ошибок всех кратностей</h2>
+        <table class="table table-striped table-bordered w-auto">
+            <thead>
+            <tr>
+                <th>Кратность</th>
+                <th>Количество ошибок</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $key, $value := .errorsCount}}
+            {{if (ne $key 0)}}
+            <tr>
+                <td>{{$key}}</td>
+                <td>{{$value}}</td>
+            </tr>
+            {{end}}
+            {{end}}
+            </tbody>
+        </table>
+        <h2 class="my-4">Все ошибки</h2>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Кратность</th>
+                <th>Вектора ошибок</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $key, $value := .errorsRaw}}
+            {{if (ne $key 0)}}
+            <tr>
+                <td>{{$key}}</td>
+                <td>
+                    {{ range $e := $value }}
+                    {{$e}}
+                    {{end}}
+                </td>
+            </tr>
+            {{end}}
+            {{end}}
+            </tbody>
+        </table>
+    </div>
     <footer class="py-2 mt-4 container border-top">
         <p class="text-center text-muted">ИУ5-53Б Ювенский Лев | <a
-                href="http://github.com/yu-leo/bmstu-networks-corrective-ability">github.com/yu-leo/bmstu-networks-corrective-ability</a>
+                href="https://github.com/yu-leo/bmstu-networks-corrective-ability">github.com/yu-leo/bmstu-networks-corrective-ability</a>
         </p>
     </footer>
 </div>

@@ -7,10 +7,13 @@ import (
 )
 
 type Results struct {
+	cfg *Config
 }
 
-func NewResults() *Results {
-	return &Results{}
+func NewResults(cfg *Config) *Results {
+	return &Results{
+		cfg: cfg,
+	}
 }
 
 func (s *Results) Calculate() {
