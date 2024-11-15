@@ -34,13 +34,25 @@ func (s *Results) Calculate() {
 		var correctedCounter uint64
 		for _, errorVector := range errorClass {
 			transferredVector := ImposeError(s.cfg.vector, errorVector)
+			if s.cfg.debug && class == 1 {
+				fmt.Printf("\ntransferredVector: %b\n", transferredVector)
+			}
 			_, syndrome := OperationO(transferredVector, s.cfg.genPolynomial)
+			if s.cfg.debug && class == 1 {
+				fmt.Printf("syndrome: %b\n", syndrome)
+			}
 			if syndrome == 0 {
 				continue
 			}
 			correctedVector := ImposeError(transferredVector, s.SyndromeTable[class][syndrome])
+			if s.cfg.debug && class == 1 {
+				fmt.Printf("correctedVector: %b\n", correctedVector)
+			}
 			if correctedVector == s.cfg.vector {
 				correctedCounter++
+				if s.cfg.debug && class == 1 {
+					fmt.Printf("eror corrected successfully | counter: %d\n", correctedCounter)
+				}
 			}
 		}
 		s.result[class] = ResultRow{

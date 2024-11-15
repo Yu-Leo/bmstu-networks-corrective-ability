@@ -24,14 +24,16 @@ type Config struct {
 	K             uint64
 	vector        uint64
 	genPolynomial uint64
+	debug         bool
 }
 
 func main() {
 	var config = &Config{
 		N:             15,
 		K:             11,
-		vector:        1335, // TODO
-		genPolynomial: 19,   // 10011
+		vector:        32050, // TODO
+		genPolynomial: 19,    // 10011
+		debug:         true,
 	}
 
 	errors := NewErrors(config)
