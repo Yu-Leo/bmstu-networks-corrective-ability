@@ -9,6 +9,7 @@ import (
 type ResultRow struct {
 	CorrectiveAbility string
 	Count             uint64
+	DetectedCount     uint64
 	ClassSize         int
 }
 
@@ -31,7 +32,7 @@ func (s *Results) Calculate() {
 	s.result = make([]ResultRow, s.cfg.N+1)
 
 	for class, errorClass := range s.errorClasses {
-		var correctedCounter uint64
+		var correctedCounter, detectedCounter uint64
 		for _, errorVector := range errorClass {
 			transferredVector := ImposeError(s.cfg.vector, errorVector)
 			if s.cfg.debug && class == 1 {
@@ -44,7 +45,8 @@ func (s *Results) Calculate() {
 			if syndrome == 0 {
 				continue
 			}
-			correctedVector := ImposeError(transferredVector, s.SyndromeTable[class][syndrome])
+			detectedCounter++
+			correctedVector := ImposeError(transferredVector, s.SyndromeTable[1][syndrome])
 			if s.cfg.debug && class == 1 {
 				fmt.Printf("correctedVector: %b\n", correctedVector)
 			}
@@ -58,6 +60,7 @@ func (s *Results) Calculate() {
 		s.result[class] = ResultRow{
 			fmt.Sprintf("%.2f", float64(correctedCounter)*100/float64(len(errorClass))),
 			correctedCounter,
+			detectedCounter,
 			len(errorClass),
 		}
 	}
