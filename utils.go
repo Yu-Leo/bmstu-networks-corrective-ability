@@ -16,82 +16,33 @@ func powBinary(n uint64) uint64 {
 	return res
 }
 
-func getBinaryLength(digit uint64) uint64 {
-	bitsNum := uint64(0)
-	for ; digit/2 != 0; digit /= 2 {
-		bitsNum++
-	}
-	bitsNum++
-	return bitsNum
-}
+func GetDivisionRemainder(divisible, divider uint64) uint64 {
+	difference := 1
 
-func IntToBytes(digit uint64) []byte {
-	var res []byte
-	for i := powBinary(getBinaryLength(digit) - 1); i > 0; i /= 2 {
-		res = append(res, byte(digit/i))
-		digit %= i
-	}
-	return res
-}
+	for difference >= 0 {
+		difference = bitLen(divisible) - bitLen(divider)
 
-func OperationO(a, b uint64) (uint64, uint64) {
-	if a < b {
-		return 0, a
-	}
-
-	var integer uint64
-	aBytes := IntToBytes(a)
-	bLen := getBinaryLength(b)
-	var cur uint64
-
-	aBytesPos := uint64(0)
-	for ; aBytesPos < bLen; aBytesPos++ {
-		cur <<= 1
-		cur += uint64(aBytes[aBytesPos])
-	}
-
-	for ; aBytesPos <= uint64(len(aBytes)); aBytesPos++ {
-		firstBitInCur := cur / powBinary(bLen-1)
-		integer <<= 1
-		integer += firstBitInCur
-
-		if firstBitInCur == 1 {
-			cur ^= b
-		}
-		if aBytesPos == uint64(len(aBytes)) {
-			break
+		if difference > 0 {
+			divisible = divisible ^ (divider << difference)
+		} else {
+			divisible = divisible ^ divider
 		}
 
-		cur <<= 1
-		cur += uint64(aBytes[aBytesPos])
+		difference = bitLen(divisible) - bitLen(divider)
 	}
 
-	return integer, cur
+	return divisible
 }
 
-func ImposeError(a, e uint64) uint64 {
-	aBytes := IntToBytes(a)
-	eBytes := IntToBytes(e)
-
-	if len(aBytes) > len(eBytes) {
-		eBytes = append(make([]byte, len(aBytes)-len(eBytes)), eBytes...)
-	} else {
-		aBytes = append(make([]byte, len(eBytes)-len(aBytes)), aBytes...)
+// bitLen - функция для получения количества битов в числе
+func bitLen(n uint64) int {
+	if n == 0 {
+		return 0
 	}
-
-	for pos, eByte := range eBytes {
-		if eByte == 1 {
-			if aBytes[pos] == 1 {
-				aBytes[pos] = 0
-				continue
-			}
-			aBytes[pos] = 1
-		}
+	bits := 0
+	for n > 0 {
+		bits++
+		n >>= 1
 	}
-	a = 0
-	for _, val := range aBytes {
-		a <<= 1
-		a += uint64(val)
-	}
-	return a
+	return bits
 }

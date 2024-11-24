@@ -17,10 +17,10 @@ type Results struct {
 	cfg           *Config
 	result        []ResultRow
 	errorClasses  [][]uint64
-	SyndromeTable map[int]map[uint64]uint64
+	SyndromeTable map[uint64]uint64
 }
 
-func NewResults(cfg *Config, errorClasses [][]uint64, SyndromeTable map[int]map[uint64]uint64) *Results {
+func NewResults(cfg *Config, errorClasses [][]uint64, SyndromeTable map[uint64]uint64) *Results {
 	return &Results{
 		cfg:           cfg,
 		errorClasses:  errorClasses,
@@ -34,23 +34,24 @@ func (s *Results) Calculate() {
 	for class, errorClass := range s.errorClasses {
 		var correctedCounter, detectedCounter uint64
 		for _, errorVector := range errorClass {
-			transferredVector := ImposeError(s.cfg.vector, errorVector)
+			transferredVector := s.cfg.codedVector ^ errorVector
 			if s.cfg.debug && class == 1 {
 				fmt.Printf("\ntransferredVector: %b\n", transferredVector)
 			}
-			_, syndrome := OperationO(transferredVector, s.cfg.genPolynomial)
+			syndrome := GetDivisionRemainder(transferredVector, s.cfg.genPolynomial)
 			if s.cfg.debug && class == 1 {
-				fmt.Printf("syndrome: %b\n", syndrome)
+				fmt.Printf("syndrome: %b | error: %b\n", syndrome, s.SyndromeTable[syndrome])
 			}
 			if syndrome == 0 {
 				continue
 			}
 			detectedCounter++
-			correctedVector := ImposeError(transferredVector, s.SyndromeTable[1][syndrome])
+			correctedVector := transferredVector ^ s.SyndromeTable[syndrome]
+
 			if s.cfg.debug && class == 1 {
 				fmt.Printf("correctedVector: %b\n", correctedVector)
 			}
-			if correctedVector == s.cfg.vector {
+			if correctedVector == s.cfg.codedVector {
 				correctedCounter++
 				if s.cfg.debug && class == 1 {
 					fmt.Printf("eror corrected successfully | counter: %d\n", correctedCounter)

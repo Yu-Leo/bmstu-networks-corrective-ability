@@ -20,7 +20,7 @@ func NewErrorsAndSyndromes(cfg *Config) *ErrorsAndSyndromes {
 func (e *ErrorsAndSyndromes) Calculate() {
 	e.errorMap = make(map[string]string, powBinary(e.cfg.N))
 	for i := uint64(1); i < powBinary(e.cfg.N); i++ {
-		_, syndrome := OperationO(i, e.cfg.genPolynomial)
+		syndrome := GetDivisionRemainder(e.cfg.codedVector^i, e.cfg.genPolynomial)
 		e.errorMap[fmt.Sprintf("%b", i)] = fmt.Sprintf("%b", syndrome)
 	}
 }

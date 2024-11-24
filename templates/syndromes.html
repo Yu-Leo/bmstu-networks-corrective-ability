@@ -60,10 +60,7 @@
         </nav>
 
         <div class="container">
-            <h2 class="my-4">Синдромы</h2>
-            {{range $key, $value := .}}
-            {{if (ne $key 0)}}
-            <h3 class="my-4">Ошибки кратности {{$key}}</h3>
+            <h2 class="my-4">Синдромы ошибок кратности 1</h2>
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
@@ -72,16 +69,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{range $k, $v := $value}}
+                {{range $key, $value := .}}
                 <tr>
-                    <td>{{$k}}</td>
-                    <td>{{$v}}</td>
+                    <td>{{$key}}</td>
+                    <td>{{$value}}</td>
                 </tr>
                 {{end}}
                 </tbody>
             </table>
-            {{end}}
-            {{end}}
         </div>
     </div>
     <footer class="py-2 mt-4 container border-top">

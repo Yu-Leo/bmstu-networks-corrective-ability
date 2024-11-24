@@ -22,16 +22,24 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 type Config struct {
 	N             uint64
 	K             uint64
-	vector        uint64
+	codedVector   uint64
 	genPolynomial uint64
 	debug         bool
 }
 
 func main() {
+	//var config = &Config{ // Test config
+	//	N:             7,
+	//	K:             4,
+	//	codedVector:   69, // 1000.101
+	//	genPolynomial: 11, // 1011
+	//	debug: true,
+	//}
+
 	var config = &Config{
 		N:             15,
 		K:             11,
-		vector:        32050, // 111.1101.0011.0010
+		codedVector:   32050, // 111.1101.0011.0010
 		genPolynomial: 19,    // 10011
 		debug:         true,
 	}
